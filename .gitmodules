@@ -1,0 +1,3 @@
+[submodule "chess-app-frontend"]
+	path = chess-app-frontend
+	url = https://github.com/Ultrasonic1209/chess-app-frontend.git
