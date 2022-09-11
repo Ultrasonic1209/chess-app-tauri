@@ -7,7 +7,7 @@
     "distDir": "../chess-app-frontend/out"
   },
   "package": {
-    "productName": "Checkmate",
+    "productName": "Checkmate Dev",
     "version": "0.1.0"
   },
   "tauri": {
@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "xyz.ultras-playroom.chessapp",
+      "identifier": "xyz.ultras-playroom.chessapp.dev",
       "longDescription": "Play chess with the computer, with a friend, over the internet! (You choose)",
       "macOS": {
         "entitlements": null,
@@ -58,7 +58,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Checkmate",
+        "title": "Checkmate Dev",
         "width": 800
       }
     ]
