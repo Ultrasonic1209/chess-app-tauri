@@ -60,7 +60,7 @@ jobs:
           ${{ matrix.platform }}-stable-cargo-index-
 
     - name: install app dependencies
-      run: yarn
+      run: yarn --immutable
       working-directory: ./chess-app-frontend
 
     - name: install tauri cli
