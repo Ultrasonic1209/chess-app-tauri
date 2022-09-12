@@ -11,7 +11,11 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        
     - name: setup node
       uses: actions/setup-node@v1
       with:
@@ -31,7 +35,7 @@ jobs:
     - name: install app dependencies and build it
       run: yarn && yarn staticbuild
       working-directory: ./chess-app-frontend
-      
+
     - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
