@@ -19,7 +19,11 @@
 	"remoteUser": "vscode",
 	"features": {
 		"node": "lts",
-		"rust": "latest"
+		"rust": "latest",
+        "ghcr.io/devcontainers/features/desktop-lite:1": {
+            "version": "latest",
+			"password": "vscode"
+        }
 	},
 
 	"customizations": {
@@ -30,5 +34,7 @@
 			}
 		  }
 		}
-	  }
+	},
+
+	"forwardPorts": [6080]
 }
