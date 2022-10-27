@@ -1,0 +1,54 @@
+name: "deploy"
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy for'     
+        required: true
+        default: '0.0.0'
+      release_id:
+        description: 'Draft release to deploy from'     
+        required: true
+        default: 'untagged-000000000000000000000'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch macos sig
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: 'tag/${{ github.event.inputs.release_id }}'
+          file: 'Checkmate.Dev.app.tar.gz.sig'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch linux sig
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: 'tag/${{ github.event.inputs.release_id }}'
+          file: 'checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch windows sig
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: 'tag/${{ github.event.inputs.release_id }}'
+          file: 'Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set macos sig
+        id: macos-sig
+        run: echo "VALUE=${cat Checkmate.Dev.app.tar.gz.sig}" >> $GITHUB_OUTPUT
+
+      - name: Set linux sig
+        id: linux-sig
+        run: echo "VALUE=${cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig}" >> $GITHUB_OUTPUT
+
+      - name: Set windows sig
+        id: windows-sig
+        run: echo "VALUE=${cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig}" >> $GITHUB_OUTPUT

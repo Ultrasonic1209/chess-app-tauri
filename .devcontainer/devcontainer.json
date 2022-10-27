@@ -18,12 +18,10 @@
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode",
 	"features": {
-		"node": "lts",
-		"rust": "latest",
-        "ghcr.io/devcontainers/features/desktop-lite:1": {
-            "version": "latest",
-			"password": "vscode"
-        }
+		"ghcr.io/devcontainers/features/desktop-lite:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {},
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers/features/rust:1": {}
 	},
 
 	"customizations": {
