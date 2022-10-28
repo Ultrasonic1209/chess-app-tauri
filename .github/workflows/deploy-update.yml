@@ -53,3 +53,4 @@ jobs:
               echo "macos: ${{ steps.macos-sig.VALUE }}"
               echo "linux: ${{ steps.linux-sig.VALUE }}"
               echo "windows: ${{ steps.windows-sig.VALUE }}"
+              echo "windows2: $(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)"
