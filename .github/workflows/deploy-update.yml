@@ -48,3 +48,8 @@ jobs:
       - name: Set windows sig
         id: windows-sig
         run: echo "VALUE=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)" >> $GITHUB_OUTPUT
+
+      - run: |
+              echo "macos: ${{ steps.macos-sig.VALUE }}"
+              echo "linux: ${{ steps.linux-sig.VALUE }}"
+              echo "windows: ${{ steps.windows-sig.VALUE }}"
