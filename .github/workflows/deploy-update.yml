@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
 
@@ -21,13 +21,16 @@ jobs:
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev.app.tar.gz.sig'
+          target: '${{ env.home }}/Checkmate.Dev.app.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch linux sig
+        id: release_metadata
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
+          target: '${{ env.home }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch windows sig
@@ -35,25 +38,71 @@ jobs:
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
+          target: '${{ env.home }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set macos sig
         run: |
-              SIG=$(cat Checkmate.Dev.app.tar.gz.sig)\n
+              SIG=$(cat ${{ env.home }}/Checkmate.Dev.app.tar.gz.sig)
               echo "MACOS_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set linux sig
         run: |
-              SIG=$(cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
+              SIG=$(cat ${{ env.home }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
               echo "LINUX_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set windows sig
         run: |
-              SIG=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)\n
+              SIG=$(cat ${{ env.home }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)
               echo "WINDOWS_SIG=$SIG" >> $GITHUB_ENV
 
-      - run: |
-              echo "macos: ${{ env.MACOS_SIG }}"
-              echo "linux: ${{ env.LINUX_SIG }}"
-              echo "windows: ${{ env.WINDOWS_SIG }}"
-              echo "windows2: $(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)"
+      #- run: |
+      #        echo "macos: ${{ env.MACOS_SIG }}"
+      #        echo "linux: ${{ env.LINUX_SIG }}"
+      #        echo "windows: ${{ env.WINDOWS_SIG }}"
+
+      - name: Get content to write to file
+        uses: satackey/action-js-inline@release-master
+        id: getcontent
+        with:
+          script: |
+                    const core = require('@actions/core')
+
+                    let now = new Date();
+
+                    let content = {
+                      "version": "v${{ github.event.inputs.version }}",
+                      "notes": "${{ steps.release_metadata.outputs.body }}",
+                      "pub_date": now.toISOString(),
+                      "platforms": {
+                        "darwin-x86_64": {
+                          "signature": "${{ env.MACOS_SIG }}",
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate.Dev.app.tar.gz"
+                        },
+                        "linux-x86_64": {
+                          "signature": "${{ env.LINUX_SIG }}",
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz"
+                        },
+                        "windows-x86_64": {
+                          "signature": "${{ env.WINDOWS_SIG }}",
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip"
+                        }
+                      }
+                    };
+
+                    console.log(content);
+                    core.setOutput('content', JSON.stringify(content));
+
+      - name: Write to file
+        uses: "DamianReeves/write-file-action@master"
+        with:
+          path: update-data.json
+          write-mode: overwrite
+          contents: ${{ steps.release_metadata.getcontent.content }}
+            
+      - name: Commit & Push
+        uses: Andro999b/push@v1.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          message: 'Deploying version v${{ github.event.inputs.version }}'
