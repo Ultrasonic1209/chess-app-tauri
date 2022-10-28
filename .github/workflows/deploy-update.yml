@@ -38,25 +38,22 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set macos sig
-        id: macos-sig
         run: |
               SIG=$(cat Checkmate.Dev.app.tar.gz.sig)\n
-              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
+              echo "MACOS_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set linux sig
-        id: linux-sig
         run: |
               SIG=$(cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
-              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
+              echo "LINUX_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set windows sig
-        id: windows-sig
         run: |
               SIG=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)\n
-              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
+              echo "WINDOWS_SIG=$SIG" >> $GITHUB_ENV
 
       - run: |
-              echo "macos: ${{ steps.macos-sig.VALUE }}"
-              echo "linux: ${{ steps.linux-sig.VALUE }}"
-              echo "windows: ${{ steps.windows-sig.VALUE }}"
+              echo "macos: ${{ env.MACOS_SIG }}"
+              echo "linux: ${{ env.LINUX_SIG }}"
+              echo "windows: ${{ env.WINDOWS_SIG }}"
               echo "windows2: $(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)"
