@@ -5,11 +5,7 @@ on:
       version:
         description: 'Version to deploy for'     
         required: true
-        default: '0.0.0'
-      release_id:
-        description: 'Draft release to deploy from'     
-        required: true
-        default: 'untagged-000000000000000000000'
+        default: 'v0.1.0'
 
 jobs:
   deploy:
@@ -23,32 +19,32 @@ jobs:
       - name: Fetch macos sig
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          version: 'tag/${{ github.event.inputs.release_id }}'
+          version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev.app.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch linux sig
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          version: 'tag/${{ github.event.inputs.release_id }}'
+          version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch windows sig
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          version: 'tag/${{ github.event.inputs.release_id }}'
+          version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set macos sig
         id: macos-sig
-        run: echo "VALUE=${cat Checkmate.Dev.app.tar.gz.sig}" >> $GITHUB_OUTPUT
+        run: echo "VALUE=$(cat Checkmate.Dev.app.tar.gz.sig)" >> $GITHUB_OUTPUT
 
       - name: Set linux sig
         id: linux-sig
-        run: echo "VALUE=${cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig}" >> $GITHUB_OUTPUT
+        run: echo "VALUE=$(cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)" >> $GITHUB_OUTPUT
 
       - name: Set windows sig
         id: windows-sig
-        run: echo "VALUE=${cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig}" >> $GITHUB_OUTPUT
+        run: echo "VALUE=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)" >> $GITHUB_OUTPUT
