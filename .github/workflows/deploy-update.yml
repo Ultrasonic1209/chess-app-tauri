@@ -39,15 +39,21 @@ jobs:
 
       - name: Set macos sig
         id: macos-sig
-        run: echo "VALUE=$(cat Checkmate.Dev.app.tar.gz.sig)\n" >> $GITHUB_OUTPUT
+        run: |
+              SIG=$(cat Checkmate.Dev.app.tar.gz.sig)\n
+              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
 
       - name: Set linux sig
         id: linux-sig
-        run: echo "VALUE=$(cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)\n" >> $GITHUB_OUTPUT
+        run: |
+              SIG=$(cat checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
+              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
 
       - name: Set windows sig
         id: windows-sig
-        run: echo "VALUE=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)\n" >> $GITHUB_OUTPUT
+        run: |
+              SIG=$(cat Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)\n
+              echo "VALUE=$SIG" >> $GITHUB_OUTPUT
 
       - run: |
               echo "macos: ${{ steps.macos-sig.VALUE }}"
