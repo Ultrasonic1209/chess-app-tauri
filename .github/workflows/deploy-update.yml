@@ -98,7 +98,7 @@ jobs:
         with:
           path: update-data.json
           write-mode: overwrite
-          contents: ${{ steps.release_metadata.getcontent.content }}
+          contents: ${{ steps.getcontent.outputs.content }}
             
       - name: Commit & Push
         uses: Andro999b/push@v1.3
