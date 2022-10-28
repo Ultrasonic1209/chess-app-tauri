@@ -21,7 +21,7 @@ jobs:
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev.app.tar.gz.sig'
-          target: '$RUNNER_TEMP/Checkmate.Dev.app.tar.gz.sig'
+          target: '${{ env.RUNNER_TEMP }}/Checkmate.Dev.app.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch linux sig
@@ -30,7 +30,7 @@ jobs:
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
-          target: '$RUNNER_TEMP/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
+          target: '${{ env.RUNNER_TEMP }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch windows sig
@@ -38,7 +38,7 @@ jobs:
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
           file: 'Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
-          target: '$RUNNER_TEMP/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
+          target: '${{ env.RUNNER_TEMP }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set macos sig
