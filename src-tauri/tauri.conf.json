@@ -7,8 +7,8 @@
     "distDir": "../chess-app-frontend/out"
   },
   "package": {
-    "productName": "Checkmate Dev",
-    "version": "0.1.3"
+    "productName": "Checkmate",
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -16,7 +16,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "StrategyGame",
       "copyright": "",
       "deb": {
         "depends": []
@@ -64,7 +64,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Checkmate Dev",
+        "title": "Checkmate",
         "width": 800,
         "fileDropEnabled": false
       }
