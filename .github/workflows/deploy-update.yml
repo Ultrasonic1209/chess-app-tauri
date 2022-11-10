@@ -5,7 +5,7 @@ on:
       version:
         description: 'Version to deploy for'     
         required: true
-        default: '0.1.0'
+        default: '0.2.0'
 
 jobs:
   deploy:
@@ -20,8 +20,8 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
-          file: 'Checkmate.Dev.app.tar.gz.sig'
-          target: '${{ runner.temp }}/Checkmate.Dev.app.tar.gz.sig'
+          file: 'Checkmate.app.tar.gz.sig'
+          target: '${{ runner.temp }}/Checkmate.app.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch linux sig
@@ -29,31 +29,31 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
-          file: 'checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
-          target: '${{ runner.temp }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
+          file: 'checkmate_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
+          target: '${{ runner.temp }}/checkmate_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch windows sig
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           version: 'tags/app-v${{ github.event.inputs.version }}'
-          file: 'Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
-          target: '${{ runner.temp }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
+          file: 'Checkmate_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
+          target: '${{ runner.temp }}/Checkmate_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set macos sig
         run: |
-              SIG=$(cat ${{ runner.temp }}/Checkmate.Dev.app.tar.gz.sig)
+              SIG=$(cat ${{ runner.temp }}/Checkmate.app.tar.gz.sig)
               echo "MACOS_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set linux sig
         run: |
-              SIG=$(cat ${{ runner.temp }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
+              SIG=$(cat ${{ runner.temp }}/checkmate_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz.sig)
               echo "LINUX_SIG=$SIG" >> $GITHUB_ENV
 
       - name: Set windows sig
         run: |
-              SIG=$(cat ${{ runner.temp }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)
+              SIG=$(cat ${{ runner.temp }}/Checkmate_${{ github.event.inputs.version }}_x64_en-US.msi.zip.sig)
               echo "WINDOWS_SIG=$SIG" >> $GITHUB_ENV
 
       #- run: |
@@ -77,15 +77,15 @@ jobs:
                       "platforms": {
                         "darwin-x86_64": {
                           "signature": "${{ env.MACOS_SIG }}",
-                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate.Dev.app.tar.gz"
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate.app.tar.gz"
                         },
                         "linux-x86_64": {
                           "signature": "${{ env.LINUX_SIG }}",
-                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/checkmate-dev_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz"
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/checkmate_${{ github.event.inputs.version }}_amd64.AppImage.tar.gz"
                         },
                         "windows-x86_64": {
                           "signature": "${{ env.WINDOWS_SIG }}",
-                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate.Dev_${{ github.event.inputs.version }}_x64_en-US.msi.zip"
+                          "url": "https://github.com/Ultrasonic1209/chess-app-tauri/releases/download/app-v${{ github.event.inputs.version }}/Checkmate_${{ github.event.inputs.version }}_x64_en-US.msi.zip"
                         }
                       }
                     };
