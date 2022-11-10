@@ -72,7 +72,7 @@ jobs:
 
                     let content = {
                       "version": "v${{ github.event.inputs.version }}",
-                      "notes": "${{ steps.release_metadata.outputs.body }}",
+                      "notes": `${{ steps.release_metadata.outputs.body }}`,
                       "pub_date": now.toISOString(),
                       "platforms": {
                         "darwin-x86_64": {
